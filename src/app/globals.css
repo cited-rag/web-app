@@ -10,6 +10,12 @@
 		--card: 0 0% 100%;
 		--card-foreground: 0 0% 3.9%;
 		--card-border: 0 0% 96%;
+		--card-hover-background: radial-gradient(
+			83.53% 60.5% at 32.25% 50%,
+			#b4faf2 0%,
+			rgba(180, 250, 242, 0.5) 43.13%,
+			rgba(180, 250, 242, 0.1) 100%
+		);
 
 		--popover: 0 0% 100%;
 		--popover-foreground: 0 0% 3.9%;
@@ -23,13 +29,13 @@
 		--muted: 0 0% 96.1%;
 		--muted-foreground: 0 0% 45.1%;
 
-		--accent: 40 24% 59%;
+		--accent: 29 29% 26%;
 		--accent-foreground: 0 0% 100%;
 
 		--destructive: 0 84.2% 60.2%;
 		--destructive-foreground: 0 0% 98%;
 
-		--border: 40 24% 59%;
+		--border: 39 24% 59%;
 		--input: 0 0% 89.8%;
 		--ring: 0 0% 3.9%;
 
@@ -42,6 +48,13 @@
 
 		--card: 0 0% 3.9%;
 		--card-foreground: 0 0% 98%;
+		--card-border: 0 0% 96%;
+		--card-hover-background: radial-gradient(
+			83.53% 60.5% at 32.25% 50%,
+			#b4faf2 0%,
+			rgba(180, 250, 242, 0.5) 43.13%,
+			rgba(180, 250, 242, 0.1) 100%
+		);
 
 		--popover: 0 0% 3.9%;
 		--popover-foreground: 0 0% 98%;

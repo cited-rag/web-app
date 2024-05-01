@@ -7,6 +7,7 @@ const config = {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./src/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	prefix: "",
 	theme: {
@@ -18,6 +19,9 @@ const config = {
 			},
 		},
 		extend: {
+			backgroundImage: {
+				"card-hover-background": "var(--card-hover-background)",
+			},
 			colors: {
 				border: "hsl(var(--border))",
 				"card-border": "hsl(var(--card-border))",

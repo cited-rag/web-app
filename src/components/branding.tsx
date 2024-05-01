@@ -7,13 +7,13 @@ type Props = {
 
 export default function Branding(props: Props) {
 	return (
-		<div className="inline-flex items-center">
+		<div className="inline-flex items-center gap-2">
 			<Image
 				src="/logo.svg"
 				alt="Cited RAG Logo"
-				width={40}
-				height={40}
-				className="w-10 h-10"
+				width={24}
+				height={24}
+				className="w- h-7"
 			/>
 			{props.showName && <div className="text-lg font-semibold">Cited RAG</div>}
 		</div>
