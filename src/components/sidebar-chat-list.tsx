@@ -4,11 +4,16 @@ import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 type Props = {
 	chatList: ChatMetadata[];
+	onSelectChat: (chatId: ChatMetadata["id"]) => void;
 };
 
 export default function SidebarChatList(props: Props) {
 	return (
-		<ToggleGroup type="single" className="flex flex-col gap-0">
+		<ToggleGroup
+			type="single"
+			className="flex flex-col gap-0"
+			onValueChange={props.onSelectChat}
+		>
 			{props.chatList.map((chatMetadata) => (
 				<ToggleGroupItem
 					key={chatMetadata.id}

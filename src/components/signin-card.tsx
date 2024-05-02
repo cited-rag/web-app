@@ -1,18 +1,18 @@
 "use client";
-import React, { useState } from "react";
-import { Card, CardContent } from "./ui/card";
-import Branding from "./branding";
-import { Separator } from "./ui/separator";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { ArrowRight, BadgeCheck } from "lucide-react";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { useDebounce, useThrottle } from "@uidotdev/usehooks";
 import { getUsernameExists, signIn } from "@/lib/api/auth";
-import { useQuery } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
-import { redirect, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@uidotdev/usehooks";
+import { ArrowRight, BadgeCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import Branding from "./branding";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
 import { useToast } from "./ui/use-toast";
 
 export default function SignInCard() {

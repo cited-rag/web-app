@@ -21,6 +21,8 @@ export default function Providers(props: Props) {
 	useEffect(() => {
 		if (token) {
 			setAuthentication(true); // Setting the authentication status to true if a token exists
+		} else {
+			setAuthentication(false);
 		}
 	}, [setAuthentication, token]);
 
