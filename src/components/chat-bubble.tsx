@@ -1,10 +1,8 @@
 import { cn } from "@/lib/utils";
-import React from "react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import ChatAvatarPill from "./chat-avatar-pill";
 import { ChatMessage } from "@/types";
-import { Separator } from "./ui/separator";
+import ChatAvatarPill from "./chat-avatar-pill";
 import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
 
 type Props = {
 	chatItem: ChatMessage;

@@ -10,13 +10,13 @@ import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
 import SourceListItem from "./source-list-item";
 import { addSourceURL, deleteSource } from "@/lib/api/source";
-import { toast } from "sonner";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "./ui/tooltip";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
 	chatMetadata: ChatMetadata;
@@ -26,6 +26,7 @@ export default function SourcesView(props: Props) {
 	const formRef = useRef<HTMLFormElement>(null);
 	const [sourceUrl, setSourceUrl] = useState("");
 	const queryClient = useQueryClient();
+	const { toast } = useToast();
 
 	const { data: sources } = useQuery({
 		queryKey: ["chat-sources", props.chatMetadata.id],
@@ -45,9 +46,11 @@ export default function SourcesView(props: Props) {
 			});
 		},
 		onError: () => {
-			toast.error(
-				"Failed to add source. Check if the URL is valid PDF or Text Document and is not already added."
-			);
+			toast({
+				title: "Failed to add source",
+				description:
+					"Check if the URL is valid PDF or Text Document and is not already added.",
+			});
 		},
 	});
 
@@ -61,7 +64,10 @@ export default function SourcesView(props: Props) {
 			});
 		},
 		onError: () => {
-			toast.error("Failed to delete source");
+			toast({
+				title: "Failed to delete source",
+				description: "Please try again.",
+			});
 		},
 	});
 

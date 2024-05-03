@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
 import React, { useEffect, useRef } from "react";
 import { useAuthStore } from "./useAuthStore";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 
 type Props = {
 	children: React.ReactNode;

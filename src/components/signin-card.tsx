@@ -13,7 +13,7 @@ import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function SignInCard() {
 	const [username, setUsername] = useState("");
@@ -35,7 +35,22 @@ export default function SignInCard() {
 	const { refetch: signInAction } = useQuery({
 		enabled: false,
 		queryKey: ["signIn", username],
-		queryFn: signIn(username, password),
+		queryFn: () => {
+			return signIn(username, password)()
+				.then(() => {
+					console.log("Sign in successful");
+					setAuthentication(true);
+					router.replace("/");
+					return true;
+				})
+				.catch(() => {
+					toast({
+						title: "Sign In Failed",
+						description: "Please check your credentials and try again.",
+					});
+					setPassword("");
+				});
+		},
 		refetchInterval: false,
 		refetchOnMount: false,
 		retry: false,
@@ -45,20 +60,14 @@ export default function SignInCard() {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log("submit", username, password);
-		signInAction()
-			.then(() => {
-				console.log("Sign in successful");
-				setAuthentication(true);
-				router.replace("/");
-			})
-			.catch(() => {
-				toast({
-					title: "Sign In Failed",
-					description: "Please check your credentials and try again.",
-				});
-				setPassword("");
+		if (password.length < 5) {
+			toast({
+				title: "Password too short",
+				description: "Password should be at least 5 characters long.",
 			});
+			return;
+		}
+		signInAction();
 	};
 
 	return (

@@ -1,12 +1,20 @@
 "use client";
 
+import https from "https";
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 
+const agent = new https.Agent({
+	rejectUnauthorized: false,
+	requestCert: false,
+	agent: false,
+});
+
 // Set config defaults when creating the instance
 const instance = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+	httpsAgent: agent,
 });
 
 instance.defaults.withCredentials = true;
