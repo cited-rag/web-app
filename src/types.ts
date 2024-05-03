@@ -30,7 +30,7 @@ export type ChatRequest = {
 	query: string;
 };
 
-export type ChatMessage = { chatId: ChatMetadata["id"] } & (
+export type ChatMessage = { id: string; chatId: ChatMetadata["id"] } & (
 	| ChatRequest
 	| ChatResponse
 );
@@ -49,3 +49,15 @@ export type Source = {
 	__v: 0;
 	id: string;
 } & URLSource;
+
+export type ChatItem = {
+	chat: ChatMetadata["id"];
+	owner: User["id"];
+	query: string;
+	response: string;
+	source: ChatResponseSource[];
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
+	id: string;
+};

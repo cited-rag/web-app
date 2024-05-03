@@ -16,7 +16,9 @@ export const useMessageStore = create<MessageStoreInterface>((set) => ({
 			const groupedMessages = new Map(state.groupedMessages);
 			for (const message of messages) {
 				const currentMessages = groupedMessages.get(message.chatId) ?? [];
-				groupedMessages.set(message.chatId, [...currentMessages, message]);
+				currentMessages.find((m) => m.id === message.id) ??
+					currentMessages.push(message);
+				groupedMessages.set(message.chatId, [...currentMessages]);
 			}
 			return { groupedMessages };
 		}),

@@ -1,5 +1,11 @@
 import axios from "@/lib/axios";
-import { ChatMessage, ChatMetadata, ChatResponse, Source } from "@/types";
+import {
+	ChatItem,
+	ChatMessage,
+	ChatMetadata,
+	ChatResponse,
+	Source,
+} from "@/types";
 
 export function createChat() {
 	return async () => {
@@ -27,18 +33,28 @@ export function getChatDetails(id: ChatMetadata["id"]) {
 
 export function queryChat(id: ChatMetadata["id"], query: string) {
 	return async () => {
-		const response = await axios.post<ChatResponse>("/chat/query", {
+		const response = await axios.post<ChatItem>("/chat/query", {
 			id,
 			query,
 		});
 
 		if (response.status >= 200 && response.status < 300) {
-			const message: ChatMessage = {
-				...response.data,
+			let m = response.data;
+			let requestMessage: ChatMessage = {
 				chatId: id,
-				type: "response",
+				id: m.id + "-request",
+				type: "request",
+				query: m.query,
 			};
-			return message;
+			let responseMessage: ChatMessage = {
+				chatId: id,
+				id: m.id + "-response",
+				type: "response",
+				response: m.response,
+				sources: m.source,
+			};
+
+			return [requestMessage, responseMessage];
 		}
 
 		throw new Error("Failed to fetch chats");
@@ -47,7 +63,9 @@ export function queryChat(id: ChatMetadata["id"], query: string) {
 
 export function getChatSources(chatId: ChatMetadata["id"]) {
 	return async () => {
-		const response = await axios.post<Source[]>(`/chat/source`, { id: chatId });
+		const response = await axios.post<Source[]>(`/chat/sources`, {
+			id: chatId,
+		});
 
 		if (response.status >= 200 && response.status < 300) {
 			return response.data;
@@ -68,5 +86,38 @@ export function deleteChat(id: ChatMetadata["id"]) {
 		}
 
 		throw new Error("Failed to delete chat");
+	};
+}
+
+export function getConversation(chatId: ChatMetadata["id"]) {
+	return async () => {
+		const response = await axios.post<ChatItem[]>(`/chat/conversations`, {
+			id: chatId,
+		});
+
+		if (response.status >= 200 && response.status < 300) {
+			const data = response.data;
+			const messages: ChatMessage[] = data.flatMap((m) => {
+				let request: ChatMessage = {
+					chatId,
+					id: m.id + "-request",
+					type: "request",
+					query: m.query,
+				};
+				let response: ChatMessage = {
+					chatId,
+					id: m.id + "-response",
+					type: "response",
+					response: m.response,
+					sources: m.source,
+				};
+
+				return [request, response];
+			});
+
+			return messages;
+		}
+
+		throw new Error("Failed to fetch conversation");
 	};
 }

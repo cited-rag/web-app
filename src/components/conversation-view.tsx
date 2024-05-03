@@ -1,54 +1,62 @@
-import { queryChat } from "@/lib/api/chat";
+import { getConversation, queryChat } from "@/lib/api/chat";
 import { ChatMessage, ChatMetadata, ChatRequest } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowUpFromDot, Loader } from "lucide-react";
 import ChatBubble from "./chat-bubble";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMessageStore } from "@/store/useMessageStore";
 
 type Props = {
 	chatMetadata: ChatMetadata;
-	messages: ChatMessage[];
 };
 
 export default function ConversationView(props: Props) {
+	const scrollViewRef = useRef<HTMLDivElement>(null);
+
 	const [prompt, setPrompt] = useState("");
+	const allMessages = useMessageStore((s) => s.groupedMessages);
+	const chatMessages = allMessages.get(props.chatMetadata.id);
 	const dumpMessages = useMessageStore((s) => s.dumpMessages);
 
+	const { data: conversationHistory } = useQuery({
+		queryKey: ["chat", props.chatMetadata?.id],
+		queryFn: () => getConversation(props.chatMetadata?.id)(),
+	});
+
+	useEffect(() => {
+		if (conversationHistory) {
+			dumpMessages(...conversationHistory);
+		}
+	}, [conversationHistory, dumpMessages]);
+
+	useEffect(() => {
+		scrollViewRef.current?.lastElementChild?.scrollIntoView();
+	}, [chatMessages]);
+
 	const mutation = useMutation({
-		mutationKey: ["chat", props.chatMetadata?.id, prompt],
-		mutationFn: (chatRequest: ChatMessage & ChatRequest) => {
-			return queryChat(chatRequest.chatId, chatRequest.query)();
+		mutationFn: (query: string) => {
+			return queryChat(props.chatMetadata.id, query)();
 		},
 	});
 
 	const onSubmitAction = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (prompt.trim() === "") return;
-		const chatRequest: ChatMessage & ChatRequest = {
-			chatId: props.chatMetadata?.id,
-			type: "request",
-			query: prompt,
-		};
-
-		const chatResponse = await mutation.mutateAsync(chatRequest);
-		dumpMessages(chatRequest, chatResponse);
+		const chatResponses = await mutation.mutateAsync(prompt);
+		dumpMessages(...chatResponses);
 		setPrompt("");
 	};
 
 	return (
 		<div className="flex-1 flex flex-col">
-			<ScrollArea className="flex-1">
-				{props.messages?.map((message) => (
-					<ChatBubble
-						key={message.type === "request" ? message.query : message.response}
-						chatItem={message}
-					/>
+			<div ref={scrollViewRef} className="flex-1 overflow-scroll">
+				{chatMessages?.map((message) => (
+					<ChatBubble key={message.id} chatItem={message} />
 				))}
-			</ScrollArea>
+			</div>
 			<form className="relative" onSubmit={onSubmitAction}>
 				<Input
 					disabled={mutation.isPending}
