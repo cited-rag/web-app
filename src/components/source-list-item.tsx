@@ -7,7 +7,12 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { deleteSource } from "@/lib/api/source";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "./ui/tooltip";
 
 type Props = {
 	source: Source;
@@ -22,10 +27,21 @@ export default function SourceListItem(props: Props) {
 				"border-b-[1px] border-b-accent/10 last:border-b-0"
 			)}
 		>
-			<Link className="stoke-accent/60 ml-3 my-3" />
-			<p className="text-sm text-accent/80 text-wrap text-ellipsis line-clamp-2">
-				{props.source.target}
-			</p>
+			<Link className="w-4 h-4 flex-shrink-0 stoke-accent/60 ml-3 my-3" />
+			<TooltipProvider>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<p className="flex-grow text-sm text-accent/80 text-wrap text-ellipsis line-clamp-2">
+							{props.source.target}
+						</p>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p className="text-sm text-accent/80 text-wrap text-ellipsis line-clamp-2">
+							{props.source.target}
+						</p>
+					</TooltipContent>
+				</Tooltip>
+			</TooltipProvider>
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					className={cn(
@@ -38,10 +54,10 @@ export default function SourceListItem(props: Props) {
 					<DropdownMenuItem
 						className="focus:bg-red-400"
 						onClick={() => {
-							deleteSource(props.source.id);
+							props.deleteSourceAction(props.source.id);
 						}}
 					>
-						Delete Chat
+						Delete Source
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

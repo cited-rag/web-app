@@ -1,9 +1,9 @@
 import { getChatSources } from "@/lib/api/chat";
 import { cn } from "@/lib/utils";
 import { ChatMetadata } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FilePlus, Link2 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Dropzone from "./dropzone";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
@@ -23,38 +23,54 @@ type Props = {
 };
 
 export default function SourcesView(props: Props) {
+	const formRef = useRef<HTMLFormElement>(null);
 	const [sourceUrl, setSourceUrl] = useState("");
+	const queryClient = useQueryClient();
 
-	const { data: sources, refetch: refetchSources } = useQuery({
+	const { data: sources } = useQuery({
 		queryKey: ["chat-sources", props.chatMetadata.id],
 		queryFn: getChatSources(props.chatMetadata.id),
 	});
 
 	const addSourceMutation = useMutation({
 		mutationKey: ["add-source", sourceUrl],
-		onMutate: async (sourceUrl: string) => {
-			return addSourceURL(props.chatMetadata.id, sourceUrl)();
+		mutationFn: async (sourceUrl: string) => {
+			const stripedURL = sourceUrl.replace(/\s/g, "");
+			return addSourceURL(props.chatMetadata.id, stripedURL)();
 		},
-		onSuccess: () => {
+		onSuccess: (source, variables) => {
 			setSourceUrl("");
-			refetchSources();
+			queryClient.invalidateQueries({
+				queryKey: ["chat-sources", props.chatMetadata.id],
+			});
 		},
 		onError: () => {
-			toast.error("Failed to add source");
+			toast.error(
+				"Failed to add source. Check if the URL is valid PDF or Text Document and is not already added."
+			);
 		},
 	});
 
 	const deleteSourceMutation = useMutation({
-		onMutate: async (sourceId: string) => {
+		mutationFn: async (sourceId: string) => {
 			return deleteSource(sourceId)();
 		},
 		onSuccess: () => {
-			refetchSources();
+			queryClient.invalidateQueries({
+				queryKey: ["chat-sources", props.chatMetadata.id],
+			});
 		},
 		onError: () => {
 			toast.error("Failed to delete source");
 		},
 	});
+
+	const onTextAreaKeyPressAction = (e: React.KeyboardEvent) => {
+		if (e.keyCode == 13 && e.shiftKey == false) {
+			e.preventDefault();
+			addSourceMutation.mutate(sourceUrl);
+		}
+	};
 
 	const urlSources = sources?.filter((source) => source.type === "url");
 
@@ -70,6 +86,7 @@ export default function SourcesView(props: Props) {
 						Web Sources
 					</h3>
 					<form
+						ref={formRef}
 						className="relative"
 						onSubmit={(e) => {
 							e.preventDefault();
@@ -85,6 +102,7 @@ export default function SourcesView(props: Props) {
 							)}
 							value={sourceUrl}
 							onChange={(e) => setSourceUrl(e.target.value)}
+							onKeyDown={onTextAreaKeyPressAction}
 						/>
 						<div
 							className={cn(
@@ -94,7 +112,7 @@ export default function SourcesView(props: Props) {
 						>
 							<Link2 className="w-6 h-6 stroke-accent/40" />
 							<span className="font-medium text-accent/40 text-xs">
-								Enter or Drop URLs to Add
+								Enter or Drop URL to Add
 							</span>
 						</div>
 						<Button

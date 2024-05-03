@@ -1,13 +1,12 @@
 import { getConversation, queryChat } from "@/lib/api/chat";
-import { ChatMessage, ChatMetadata, ChatRequest } from "@/types";
+import { useMessageStore } from "@/store/useMessageStore";
+import { ChatMetadata } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ArrowUpFromDot, Loader } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import ChatBubble from "./chat-bubble";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ScrollArea } from "./ui/scroll-area";
-import { useEffect, useRef, useState } from "react";
-import { useMessageStore } from "@/store/useMessageStore";
 
 type Props = {
 	chatMetadata: ChatMetadata;

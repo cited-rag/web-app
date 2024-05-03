@@ -7,7 +7,6 @@ export function addSourceURL(chatId: ChatMetadata["id"], sourceURL: string) {
 			chat: chatId,
 			url: sourceURL,
 		});
-
 		if (response.status >= 200 && response.status < 300) {
 			return response.data;
 		}
@@ -33,7 +32,6 @@ export function deleteSource(id: Source["id"]) {
 		const response = await axios.delete(`/source`, {
 			data: { id },
 		});
-
 		if (response.status >= 200 && response.status < 300) {
 			return true;
 		}
