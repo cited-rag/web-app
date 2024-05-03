@@ -8,7 +8,6 @@ import { deleteCookie, getCookie } from "cookies-next";
 const agent = new https.Agent({
 	rejectUnauthorized: false,
 	requestCert: false,
-	agent: false,
 });
 
 // Set config defaults when creating the instance
