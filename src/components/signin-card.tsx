@@ -14,6 +14,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { useToast } from "@/components/ui/use-toast";
+import GitHubButton from "react-github-btn";
 
 export default function SignInCard() {
 	const [username, setUsername] = useState("");
@@ -75,18 +76,28 @@ export default function SignInCard() {
 			<CardContent className="p-0 flex flex-row gap-5">
 				<div
 					className={cn(
-						"h-72 w-48 rounded-sm p-6",
+						"h-72 w-48 rounded-sm p-4",
 						"flex flex-col justify-center gap-5",
 						"bg-gradient-to-b from-[#B4FAF2] to-[#FFEE96]"
 					)}
 				>
 					<Branding />
 					<Separator />
-					<div>
+					<div className="flex-1">
 						<div className="text-lg font-semibold">Cited RAG</div>
 						<p className="text-sm text-muted-foreground">
 							Cited Generated Content
 						</p>
+					</div>
+					<div className="self-center">
+						<GitHubButton
+							href="https://github.com/cited-rag"
+							data-color-scheme="no-preference: light; light: light; dark: dark;"
+							data-size="large"
+							aria-label="Follow @cited-rag on GitHub"
+						>
+							View on GitHub
+						</GitHubButton>
 					</div>
 				</div>
 				<div className="flex-1 flex flex-col space-y-5">

@@ -13,7 +13,7 @@ export default function Branding(props: Props) {
 				alt="Cited RAG Logo"
 				width={24}
 				height={24}
-				className="w- h-7"
+				className="w-7 h-7"
 			/>
 			{props.showName && <div className="text-lg font-semibold">Cited RAG</div>}
 		</div>

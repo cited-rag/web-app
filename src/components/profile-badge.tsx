@@ -22,7 +22,7 @@ export default function ProfileBadge() {
 	const signOutAction = () => {
 		deleteCookie("token");
 		setAuthentication(false);
-		router.replace("/");
+		router.replace("/auth");
 	};
 
 	return (
@@ -47,6 +47,10 @@ export default function ProfileBadge() {
 				<DropdownMenuItem disabled>Billing</DropdownMenuItem>
 				<DropdownMenuItem disabled>Team</DropdownMenuItem>
 				<DropdownMenuItem disabled>Subscription</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem>
+					<a href="https://github.com/cited-rag">View on GitHub</a>
+				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem onClick={signOutAction} className="focus:bg-red-400">
 					Sign out
