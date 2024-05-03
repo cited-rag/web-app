@@ -13,7 +13,7 @@ import { deleteCookie, getCookie } from "cookies-next";
 // Set config defaults when creating the instance
 const instance = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-	httpsAgent: agent,
+	// httpsAgent: agent,
 });
 
 instance.defaults.withCredentials = true;
