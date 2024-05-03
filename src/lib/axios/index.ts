@@ -5,10 +5,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 
-const agent = new https.Agent({
-	rejectUnauthorized: false,
-	requestCert: false,
-});
+// const agent = new https.Agent({
+// 	rejectUnauthorized: false,
+// 	requestCert: false,
+// });
 
 // Set config defaults when creating the instance
 const instance = axios.create({
