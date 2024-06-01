@@ -32,12 +32,12 @@ export default function SourceListItem(props: Props) {
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<p className="flex-grow text-sm text-accent/80 text-wrap text-ellipsis line-clamp-2">
-							{props.source.target}
+							{props.source.origin[0].target}
 						</p>
 					</TooltipTrigger>
 					<TooltipContent>
 						<p className="text-sm text-accent/80 text-wrap text-ellipsis line-clamp-2">
-							{props.source.target}
+							{props.source.origin[0].target}
 						</p>
 					</TooltipContent>
 				</Tooltip>

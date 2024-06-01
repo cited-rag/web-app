@@ -13,37 +13,52 @@ export type User = {
 };
 
 export type ChatResponsePDFSource = {
-	source: Source["id"];
+	source: Source['id'];
 	pages: string[];
 };
 
 export type ChatResponseSource = ChatResponsePDFSource;
 
 export type ChatResponse = {
-	type: "response";
+	type: 'response';
 	response: string;
 	sources: ChatResponseSource[];
+	streaming: boolean;
 };
 
 export type ChatRequest = {
-	type: "request";
+	type: 'request';
 	query: string;
 };
 
-export type ChatMessage = { id: string; chatId: ChatMetadata["id"] } & (
+export type ChatMessage = { id: string; chatId: ChatMetadata['id'] } & (
 	| ChatRequest
 	| ChatResponse
 );
 
+export type ChatStreamingResponse = {
+	id: string;
+	chatId: ChatMetadata['id'];
+	response: {
+		response: string;
+		source: ChatResponseSource[] | undefined;
+	};
+} & ChatResponse;
+
 export type URLSource = {
 	target: string;
-	type: "url";
+	type: 'url';
 };
 
+export type DataSource = URLSource;
+
 export type Source = {
-	chat: ChatMetadata["id"];
-	owner: User["id"];
-	status: "loading" | "loaded" | "error";
+	target: string;
+	dataType: 'url' | 'none';
+	origin: DataSource[];
+	chat: ChatMetadata['id'];
+	owner: User['id'];
+	status: 'loading' | 'loaded' | 'error';
 	createdAt: string;
 	updatedAt: string;
 	__v: 0;
@@ -51,8 +66,8 @@ export type Source = {
 } & URLSource;
 
 export type ChatItem = {
-	chat: ChatMetadata["id"];
-	owner: User["id"];
+	chat: ChatMetadata['id'];
+	owner: User['id'];
 	query: string;
 	response: string;
 	source: ChatResponseSource[];
@@ -61,3 +76,17 @@ export type ChatItem = {
 	__v: number;
 	id: string;
 };
+
+export type QueryResponse = {
+	response: {
+		queryId: string;
+	};
+};
+
+export type ChatMetadataUpdate = {
+	collection: 'chat';
+	id: ChatMetadata['id'];
+	update: Partial<ChatMetadata>;
+};
+
+export type StreamingUpdate = ChatMetadataUpdate;

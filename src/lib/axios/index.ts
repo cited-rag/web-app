@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import https from "https";
-import { useAuthStore } from "@/store/useAuthStore";
-import axios from "axios";
-import { deleteCookie, getCookie } from "cookies-next";
+import { useAuthStore } from '@/store/useAuthStore';
+import axios from 'axios';
+import { deleteCookie, getCookie } from 'cookies-next';
 
 // const agent = new https.Agent({
 // 	rejectUnauthorized: false,
@@ -20,20 +19,20 @@ instance.defaults.withCredentials = true;
 instance.interceptors.response.use(
 	(response) => response,
 	(error) => {
-		if (error.response.data === "Invalid JWT") {
-			console.log("Invalid JWT - Deleting token");
-			deleteCookie("token");
+		if (error.response.data === 'Invalid JWT') {
+			console.log('Invalid JWT - Deleting token');
+			deleteCookie('token');
 			useAuthStore.getState().setUser(undefined);
 			useAuthStore.getState().setAuthentication(false);
-			throw new Error("Invalid Request");
+			throw new Error('Invalid Request');
 		}
 		throw error;
 	}
 );
 
-instance.defaults.headers.common["Authorization"] = getCookie("token");
+instance.defaults.headers.common['Authorization'] = getCookie('token');
 useAuthStore.subscribe((s) => {
-	instance.defaults.headers.common["Authorization"] = getCookie("token");
+	instance.defaults.headers.common['Authorization'] = getCookie('token');
 });
 
 export default instance;

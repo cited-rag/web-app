@@ -1,11 +1,12 @@
-import axios from "@/lib/axios";
+import axios from '@/lib/axios';
 import {
 	ChatItem,
 	ChatMessage,
 	ChatMetadata,
 	ChatResponse,
+	QueryResponse,
 	Source,
-} from "@/types";
+} from '@/types';
 
 export function createChat() {
 	return async () => {
@@ -15,11 +16,11 @@ export function createChat() {
 			return response.data;
 		}
 
-		throw new Error("Failed to create chat");
+		throw new Error('Failed to create chat');
 	};
 }
 
-export function getChatDetails(id: ChatMetadata["id"]) {
+export function getChatDetails(id: ChatMetadata['id']) {
 	return async () => {
 		const response = await axios.post<ChatMetadata>(`/chat`, { id });
 
@@ -27,13 +28,13 @@ export function getChatDetails(id: ChatMetadata["id"]) {
 			return response.data;
 		}
 
-		throw new Error("Failed to fetch chat");
+		throw new Error('Failed to fetch chat');
 	};
 }
 
-export function queryChat(id: ChatMetadata["id"], query: string) {
+export function queryChat(id: ChatMetadata['id'], query: string) {
 	return async () => {
-		const response = await axios.post<ChatItem>("/chat/query", {
+		const response = await axios.post<QueryResponse>('/chat/query', {
 			id,
 			query,
 		});
@@ -42,26 +43,28 @@ export function queryChat(id: ChatMetadata["id"], query: string) {
 			let m = response.data;
 			let requestMessage: ChatMessage = {
 				chatId: id,
-				id: m.id + "-request",
-				type: "request",
-				query: m.query,
+				id: m.response.queryId + '-request',
+				type: 'request',
+				query: query,
 			};
+
 			let responseMessage: ChatMessage = {
 				chatId: id,
-				id: m.id + "-response",
-				type: "response",
-				response: m.response,
-				sources: m.source,
+				id: m.response.queryId + '-response',
+				type: 'response',
+				response: '',
+				streaming: true,
+				sources: [],
 			};
 
 			return [requestMessage, responseMessage];
 		}
 
-		throw new Error("Failed to fetch chats");
+		throw new Error('Failed to fetch chats');
 	};
 }
 
-export function getChatSources(chatId: ChatMetadata["id"]) {
+export function getChatSources(chatId: ChatMetadata['id']) {
 	return async () => {
 		const response = await axios.post<Source[]>(`/chat/sources`, {
 			id: chatId,
@@ -71,11 +74,11 @@ export function getChatSources(chatId: ChatMetadata["id"]) {
 			return response.data;
 		}
 
-		throw new Error("Failed to fetch sources");
+		throw new Error('Failed to fetch sources');
 	};
 }
 
-export function deleteChat(id: ChatMetadata["id"]) {
+export function deleteChat(id: ChatMetadata['id']) {
 	return async () => {
 		const response = await axios.delete(`/chat`, {
 			data: { id },
@@ -85,11 +88,11 @@ export function deleteChat(id: ChatMetadata["id"]) {
 			return true;
 		}
 
-		throw new Error("Failed to delete chat");
+		throw new Error('Failed to delete chat');
 	};
 }
 
-export function getConversation(chatId: ChatMetadata["id"]) {
+export function getConversation(chatId: ChatMetadata['id']) {
 	return async () => {
 		const response = await axios.post<ChatItem[]>(`/chat/conversations`, {
 			id: chatId,
@@ -100,16 +103,17 @@ export function getConversation(chatId: ChatMetadata["id"]) {
 			const messages: ChatMessage[] = data.flatMap((m) => {
 				let request: ChatMessage = {
 					chatId,
-					id: m.id + "-request",
-					type: "request",
+					id: m.id + '-request',
+					type: 'request',
 					query: m.query,
 				};
 				let response: ChatMessage = {
 					chatId,
-					id: m.id + "-response",
-					type: "response",
+					id: m.id + '-response',
+					type: 'response',
 					response: m.response,
 					sources: m.source,
+					streaming: false,
 				};
 
 				return [request, response];
@@ -118,6 +122,6 @@ export function getConversation(chatId: ChatMetadata["id"]) {
 			return messages;
 		}
 
-		throw new Error("Failed to fetch conversation");
+		throw new Error('Failed to fetch conversation');
 	};
 }

@@ -78,7 +78,9 @@ export default function SourcesView(props: Props) {
 		}
 	};
 
-	const urlSources = sources?.filter((source) => source.type === "url");
+	const urlSources = sources?.filter(
+		(source) => source.origin[0].type === "url"
+	);
 
 	return (
 		<div className="w-64">

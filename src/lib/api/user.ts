@@ -17,7 +17,7 @@ export function deleteUser() {
 
 export function getUserDetails() {
 	return async () => {
-		const response = await axios.get<User>(`/user/me`);
+		const response = await axios.post<User>(`/user/me`);
 
 		if (response.status >= 200 && response.status < 300) {
 			return response.data;
@@ -29,7 +29,7 @@ export function getUserDetails() {
 
 export function getUserChats() {
 	return async () => {
-		const response = await axios.get<ChatMetadata[]>(`/user/chats`);
+		const response = await axios.post<ChatMetadata[]>(`/user/chats`);
 
 		if (response.status >= 200 && response.status < 300) {
 			return response.data;
